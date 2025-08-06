@@ -98,5 +98,67 @@
 
     window.onload = loadTasks;
   </script>
+
+  <script>
+    const taskList = document.getElementById('taskList');
+    const newTaskInput = document.getElementById('newTask');
+    const exportButton = document.getElementById('exportButton');
+    const taskData = {};
+
+    function updateTimestamp(taskName) {
+      const timestamp = new Date().toLocaleString();
+      document.getElementById(taskName).textContent = timestamp;
+      taskData[taskName] = timestamp;
+      saveTasks();
+    }
+
+    function saveTasks() {
+      localStorage.setItem('taskData', JSON.stringify(taskData));
+    }
+
+    function loadTasks() {
+      const saved = JSON.parse(localStorage.getItem('taskData'));
+      if (saved) {
+        for (const task in saved) {
+          addTask(task, saved[task]);
+        }
+      }
+    }
+
+    function addTask(taskName, timestamp = 'Never') {
+      if (document.getElementById(taskName)) return;
+      const li = document.createElement('li');
+      li.innerHTML = `
+        ${taskName} — <span id="${taskName}">${timestamp}</span>
+        <button onclick="updateTimestamp('${taskName}')">Update</button>
+      `;
+      taskList.appendChild(li);
+      taskData[taskName] = timestamp;
+      saveTasks();
+    }
+
+    function exportTasks() {
+      const blob = new Blob([JSON.stringify(taskData, null, 2)], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'task-history.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById('addTaskButton').addEventListener('click', () => {
+      const task = newTaskInput.value.trim();
+      if (task) {
+        addTask(task);
+        newTaskInput.value = '';
+      }
+    });
+
+    exportButton.addEventListener('click', exportTasks);
+
+    window.onload = loadTasks;
+  </script>
 </body>
+
 </html>
