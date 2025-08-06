@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>When Did I Last?</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    header {
+      background-color: #007BFF;
+      color: white;
+      padding: 2rem 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+    main {
+      padding: 2rem;
+      max-width: 600px;
+      margin: auto;
+    }
+    .task {
+      background: white;
+      margin: 1rem 0;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .task button {
+      margin-top: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .task button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>When Did I Last?</h1>
+    <p>Track the last time you did common tasks</p>
+  </header>
+  <main id="taskList">
+    <div class="task">
+      <h3>Change Toothbrush</h3>
+      <p id="task-toothbrush">Never</p>
+      <button onclick="updateTime('toothbrush')">Just Did It</button>
+    </div>
+    <div class="task">
+      <h3>Water Plants</h3>
+      <p id="task-plants">Never</p>
+      <button onclick="updateTime('plants')">Just Did It</button>
+    </div>
+    <div class="task">
+      <h3>Change Bedsheets</h3>
+      <p id="task-bedsheets">Never</p>
+      <button onclick="updateTime('bedsheets')">Just Did It</button>
+    </div>
+    <div class="task">
+      <h3>Clean Fridge</h3>
+      <p id="task-fridge">Never</p>
+      <button onclick="updateTime('fridge')">Just Did It</button>
+    </div>
+  </main>
+
+  <script>
+    const tasks = ['toothbrush', 'plants', 'bedsheets', 'fridge'];
+
+    function updateTime(task) {
+      const now = new Date().toLocaleString();
+      localStorage.setItem(task, now);
+      document.getElementById(`task-${task}`).textContent = now;
+    }
+
+    function loadTasks() {
+      tasks.forEach(task => {
+        const time = localStorage.getItem(task);
+        if (time) {
+          document.getElementById(`task-${task}`).textContent = time;
+        }
+      });
+    }
+
+    window.onload = loadTasks;
+  </script>
+</body>
+</html>
